@@ -19,12 +19,13 @@ from scipy.stats import pearsonr, spearmanr, linregress
 #     font_name = 'WenQuanYi Micro Hei'
 # else:
 #     font_name = 'Arial'  # 兜底方案，虽然不支持中文
+# plt.rcParams['font.family'] = font_name
+# plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 # 设置全局字体
-font_path = "NotoSansSC-Regular.ttf"  # 或 simhei.ttf
+font_path = 'simhei.ttf'
 my_font = fm.FontProperties(fname=font_path)
 plt.rcParams['font.family'] = my_font.get_name()
-# plt.rcParams['font.family'] = font_name
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 
