@@ -25,12 +25,9 @@ from scipy.stats import pearsonr, spearmanr, linregress
 
 # 设置全局字体
 font_path = 'simhei.ttf'
-if os.path.exists(font_path):
-    my_font = fm.FontProperties(fname=font_path)
-    plt.rcParams['font.family'] = my_font.get_name()
-    plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
-else:
-    st.warning('未找到中文字体文件 simhei.ttf，将使用默认字体，可能会乱码！')
+my_font = fm.FontProperties(fname=font_path)
+# plt.rcParams['font.family'] = my_font.get_name()
+plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 
 # 加载数据
@@ -126,34 +123,32 @@ else:
     with col_y:
         custom_ylabel = st.text_input('纵轴名称', value=default_ylabel)
 
+    def set_labels(title, xlabel, ylabel):
+        plt.title(title, fontproperties=my_font)
+        plt.xlabel(xlabel, fontproperties=my_font)
+        plt.ylabel(ylabel, fontproperties=my_font)
+
     # 绘制图表
     fig = plt.figure(figsize=(fig_width, fig_height))
     if chart_type == '散点图':
         sns.scatterplot(data=filtered, x='Female Enrollment Rate', y='TFR', hue='Year', palette='viridis', alpha=0.7)
-        plt.xlabel(custom_xlabel)
-        plt.ylabel(custom_ylabel)
-        plt.title(custom_title)
+        set_labels(custom_title, custom_xlabel, custom_ylabel)
 
     elif chart_type == '散点图 + 拟合线':
         plt.close()  # 清空默认 fig，lmplot 自带 fig
         g = sns.lmplot(data=filtered, x='Female Enrollment Rate', y='TFR', hue='Year',
                        height=6, aspect=1.2, scatter_kws={'alpha':0.7})
-        g.set_axis_labels(custom_xlabel, custom_ylabel)
-        plt.title(custom_title)
+        set_labels(custom_title, custom_xlabel, custom_ylabel)
         fig = plt.gcf()
 
     elif chart_type == '箱线图':
         sns.boxplot(data=filtered, x='Year', y='TFR')
-        plt.xlabel(custom_xlabel)
-        plt.ylabel(custom_ylabel)
-        plt.title(custom_title)
+        set_labels(custom_title, custom_xlabel, custom_ylabel)
 
     elif chart_type == '热力图':
         pivot = filtered.pivot_table(index='Country Name_edu', columns='Year', values='TFR', aggfunc='mean')
         sns.heatmap(pivot, cmap='YlGnBu', annot=True, fmt='.1f')
-        plt.xlabel(custom_xlabel)
-        plt.ylabel(custom_ylabel)
-        plt.title(custom_title)
+        set_labels(custom_title, custom_xlabel, custom_ylabel)
 
     elif chart_type == '双轴时间序列':
         if selected_country_codes:
@@ -162,10 +157,12 @@ else:
             for code in filtered['Country Code'].unique():
                 subset = filtered[filtered['Country Code'] == code]
                 ax = subset.plot(x='Year', y='TFR', label=f'{country_code_to_name[code]} TFR', legend=True)
-                subset.plot(x='Year', y='Female Enrollment Rate', secondary_y=True,
+                ax2 = subset.plot(x='Year', y='Female Enrollment Rate', secondary_y=True,
                             label=f'{country_code_to_name[code]} 入学率', ax=ax, legend=True)
-            plt.xlabel(custom_xlabel)
-            plt.title(custom_title)
+                ax.legend(prop=my_font)
+                ax2.legend(prop=my_font)
+            plt.xlabel(custom_xlabel, fontproperties=my_font)
+            plt.title(custom_title, fontproperties=my_font)
             fig = plt.gcf()
         else:
             st.info('请至少选择一个国家/地区以显示双轴时间序列')
