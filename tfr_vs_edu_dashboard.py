@@ -1,4 +1,5 @@
 
+import os
 import io
 import platform
 
@@ -24,9 +25,12 @@ from scipy.stats import pearsonr, spearmanr, linregress
 
 # 设置全局字体
 font_path = 'simhei.ttf'
-my_font = fm.FontProperties(fname=font_path)
-plt.rcParams['font.family'] = my_font.get_name()
-plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+if os.path.exists(font_path):
+    my_font = fm.FontProperties(fname=font_path)
+    plt.rcParams['font.family'] = my_font.get_name()
+    plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
+else:
+    st.warning('未找到中文字体文件 simhei.ttf，将使用默认字体，可能会乱码！')
 
 
 # 加载数据
