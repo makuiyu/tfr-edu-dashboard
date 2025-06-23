@@ -6,21 +6,25 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 from scipy.stats import pearsonr, spearmanr, linregress
 
-system = platform.system()
-if system == 'Windows':
-    font_name = 'SimHei'  # 黑体
-elif system == 'Darwin':
-    font_name = 'Heiti TC'  # macOS 系统的黑体
-elif system == 'Linux':
-    # 尝试加载常见中文字体
-    font_name = 'WenQuanYi Micro Hei'
-else:
-    font_name = 'Arial'  # 兜底方案，虽然不支持中文
+# system = platform.system()
+# if system == 'Windows':
+#     font_name = 'SimHei'  # 黑体
+# elif system == 'Darwin':
+#     font_name = 'Heiti TC'  # macOS 系统的黑体
+# elif system == 'Linux':
+#     # 尝试加载常见中文字体
+#     font_name = 'WenQuanYi Micro Hei'
+# else:
+#     font_name = 'Arial'  # 兜底方案，虽然不支持中文
 
 # 设置全局字体
-plt.rcParams['font.family'] = font_name
+font_path = "NotoSansSC-Regular.ttf"  # 或 simhei.ttf
+my_font = fm.FontProperties(fname=font_path)
+plt.rcParams['font.family'] = my_font.get_name()
+# plt.rcParams['font.family'] = font_name
 plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
 
 
